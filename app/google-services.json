@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "566466376060",
+    "project_id": "todoreminderapp",
+    "storage_bucket": "todoreminderapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566466376060:android:b507fc52ffbb22a576b4f9",
+        "android_client_info": {
+          "package_name": "com.udacity.project4"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "566466376060-aspj8bg4vrop1fppuipu126ki0bfv4o9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.udacity.project4",
+            "certificate_hash": "4303ef8c14f63a84f2bfeb4ff6a29b4046aeb002"
+          }
+        },
+        {
+          "client_id": "566466376060-24gnhh0pnlm3mlc46sh795isu36lvo0o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjIVkZ0j0u10__c7g0-KYW_mMKqkL4ZzI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "566466376060-24gnhh0pnlm3mlc46sh795isu36lvo0o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
