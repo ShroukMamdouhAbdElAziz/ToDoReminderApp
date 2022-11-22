@@ -26,7 +26,7 @@ class SaveReminderFragment : BaseFragment() {
             }
 
             else{
-                // show dialog explain to the user
+                // shouldShowRequestPermissionRationale() dialog explain to the user
             }
 
         }
