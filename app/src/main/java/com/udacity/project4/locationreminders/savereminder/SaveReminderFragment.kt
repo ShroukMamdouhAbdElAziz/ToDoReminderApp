@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
@@ -15,8 +16,22 @@ import org.koin.android.ext.android.inject
 class SaveReminderFragment : BaseFragment() {
     //Get the view model this time as a single to be shared with the another fragment
     override val _viewModel: SaveReminderViewModel by inject()
-    //
     private lateinit var binding: FragmentSaveReminderBinding
+
+
+    private val requestBackgroundPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()){ isGranted:Boolean ->
+            if (isGranted){
+              // continue the app workflow
+            }
+
+            else{
+                // show dialog explain to the user
+            }
+
+        }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
