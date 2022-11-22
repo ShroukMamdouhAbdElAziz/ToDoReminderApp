@@ -10,11 +10,12 @@ import androidx.core.app.TaskStackBuilder
 import com.udacity.project4.BuildConfig
 import com.udacity.project4.R
 import com.udacity.project4.locationreminders.ReminderDescriptionActivity
+import com.udacity.project4.locationreminders.geofence.GeofenceBroadcastReceiver
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 
 private const val NOTIFICATION_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel"
 
-fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
+/*fun sendNotification(context: GeofenceBroadcastReceiver, reminderDataItem: ReminderDataItem) {
     val notificationManager = context
         .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -50,6 +51,6 @@ fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
         .build()
 
     notificationManager.notify(getUniqueId(), notification)
-}
+}*/
 
 private fun getUniqueId() = ((System.currentTimeMillis() % 10000).toInt())

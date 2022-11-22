@@ -9,7 +9,7 @@ import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
 import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
-import com.udacity.project4.utils.sendNotification
+
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
 import kotlin.coroutines.CoroutineContext
@@ -40,7 +40,7 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
     }
 
     //TODO: get the request id of the current geofence
-    private fun sendNotification(triggeringGeofences: List<Geofence>) {
+    /*private fun sendNotification(triggeringGeofences: List<Geofence>) {
         val requestId = ""
 
         //Get the local repository instance
@@ -64,6 +64,6 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
                 )
             }
         }
-    }
+    }*/
 
 }

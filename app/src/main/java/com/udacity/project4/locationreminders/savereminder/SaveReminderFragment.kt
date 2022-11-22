@@ -15,6 +15,7 @@ import org.koin.android.ext.android.inject
 class SaveReminderFragment : BaseFragment() {
     //Get the view model this time as a single to be shared with the another fragment
     override val _viewModel: SaveReminderViewModel by inject()
+    //
     private lateinit var binding: FragmentSaveReminderBinding
 
     override fun onCreateView(
