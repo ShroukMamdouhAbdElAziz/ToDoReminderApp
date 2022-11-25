@@ -1,11 +1,13 @@
 package com.udacity.project4.locationreminders.savereminder
 
 import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.Priority
@@ -107,7 +109,25 @@ class SaveReminderFragment : BaseFragment() {
         )
     }
 
-    fun requestBackgroundPermission() { backgroundLocationPermissionRequest.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+    fun checkForegroundPermission() {
+        ContextCompat.checkSelfPermission(Ma)
+    }
+
+    fun requestBackgroundPermission() {
+        backgroundLocationPermissionRequest.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+    }
+
+
+    private fun checkForegroundLocationPermission() {
+        val shouldShowRequestRationale =
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
+                    || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestRationale) {
+
+        } else {
+
+        }
     }
 
 
@@ -115,5 +135,12 @@ class SaveReminderFragment : BaseFragment() {
         super.onDestroy()
         //make sure to clear the view model after destroy, as it's a single view model.
         _viewModel.onClear()
+    }
+
+    companion object {
+        private val forgroundLocationPermissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
     }
 }
