@@ -141,6 +141,17 @@ class SaveReminderFragment : BaseFragment() {
         backgroundLocationPermissionRequest.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
     }
 
+    fun shouldAskBackgroundPermission() {
+        val backgroundLocationPermission = Manifest.permission.ACCESS_BACKGROUND_LOCATION
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+            && shouldShowRequestPermissionRationale(backgroundLocationPermission)
+        ) {
+            displayLocationPermissionsDialog()
+        } else {
+            requestBackgroundLocationPermission()
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()
