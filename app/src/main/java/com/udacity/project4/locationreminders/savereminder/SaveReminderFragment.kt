@@ -34,7 +34,7 @@ class SaveReminderFragment : BaseFragment() {
             }
         }
 
-    private val requestBackgroundPermissionLauncher =
+    private val backgroundLocationPermissionRequest =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
                 // continue the app workflow
@@ -97,9 +97,6 @@ class SaveReminderFragment : BaseFragment() {
             .build()
     }
 
-    fun requestBackgroundPermission() {
-
-    }
 
     fun requestForegroundPermission() {
         foregroundLocationPermissionRequest.launch(
@@ -108,6 +105,9 @@ class SaveReminderFragment : BaseFragment() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
         )
+    }
+
+    fun requestBackgroundPermission() { backgroundLocationPermissionRequest.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
     }
 
 
