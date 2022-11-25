@@ -30,7 +30,7 @@ import kotlin.coroutines.CoroutineContext
 
 // to listen for geofence transitions
 // to handle the broadCast event that will be send by Geofence
-class GeofenceBroadcastReceiver : BroadcastReceiver() , CoroutineScope{
+class GeofenceBroadcastReceiver : BroadcastReceiver(), CoroutineScope {
 
     private var coroutineJob: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -76,15 +76,15 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() , CoroutineScope{
         val requestId = ""
 
         //Get the local repository instance
-       // val remindersLocalRepository: ReminderDataSource by inject()
+        val remindersLocalRepository: ReminderDataSource by inject()
 //        Interaction to the repository has to be through a coroutine scope
         CoroutineScope(coroutineContext).launch(SupervisorJob()) {
             //get the reminder with the request id
-        //    val result = remindersLocalRepository.getReminder(requestId)
-         //   if (result is Result.Success<ReminderDTO>) {
-           //     val reminderDTO = result.data
+            val result = remindersLocalRepository.getReminder(requestId)
+            if (result is Result.Success<ReminderDTO>) {
+                val reminderDTO = result.data
                 //send a notification to the user with the reminder details
-          /*   com.udacity.project4.utils.sendNotification(
+                sendNotification(
                     this@GeofenceBroadcastReceiver, ReminderDataItem(
                         reminderDTO.title,
                         reminderDTO.description,
@@ -93,10 +93,11 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() , CoroutineScope{
                         reminderDTO.longitude,
                         reminderDTO.id
                     )
-                )*/
+                )
             }
         }
     }
+}
 
 
 

@@ -149,7 +149,7 @@ class SaveReminderFragment : BaseFragment() {
         ) {
             displayLocationPermissionsDialog()
         } else {
-            requestBackgroundLocationPermission()
+           requestBackgroundPermission()
         }
     }
 
