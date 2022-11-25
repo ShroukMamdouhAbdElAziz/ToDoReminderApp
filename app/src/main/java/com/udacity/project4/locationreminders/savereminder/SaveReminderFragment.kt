@@ -1,6 +1,9 @@
 package com.udacity.project4.locationreminders.savereminder
 
 import android.Manifest
+import android.app.AlertDialog
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +18,7 @@ import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSaveReminderBinding
+import com.udacity.project4.locationreminders.savereminder.selectreminderlocation.SelectLocationFragment
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
 
@@ -101,34 +105,44 @@ class SaveReminderFragment : BaseFragment() {
 
 
     fun requestForegroundPermission() {
-        foregroundLocationPermissionRequest.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        )
+        foregroundLocationPermissionRequest.launch(FOREGROUND_LOCATION_PERMISSIONS)
+
     }
 
-    fun checkForegroundPermission() {
-        ContextCompat.checkSelfPermission(Ma)
+    // shouldShowRequestPermissionRationale() returns true if the app has requested the permission prev and
+    //the user denied it and return false if the user turned down the permission req in the past
+    // and choosed donot ask again
+    fun shouldAskForegroundPermission() {
+
+      val showRequestDialog = shouldShowRequestPermissionRationale(FOREGROUND_LOCATION_PERMISSIONS.toString())
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && showRequestDialog){
+              diplayLocationPermisionDialog()
+        }
+
+
+
+
+
+        }
+
+
+    private fun displayLocationPermissionsDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.location_required_error)
+            .setMessage(R.string.permission_rationale_dialog)
+            .setPositiveButton("Accept") { _, _ ->
+             requestBackgroundPermission()
+            }
+            .show()
     }
+
 
     fun requestBackgroundPermission() {
         backgroundLocationPermissionRequest.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
     }
 
 
-    private fun checkForegroundLocationPermission() {
-        val shouldShowRequestRationale =
-            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
-                    || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestRationale) {
-
-        } else {
-
-        }
-    }
 
 
     override fun onDestroy() {
@@ -138,7 +152,7 @@ class SaveReminderFragment : BaseFragment() {
     }
 
     companion object {
-        private val forgroundLocationPermissions = arrayOf(
+        private val FOREGROUND_LOCATION_PERMISSIONS = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
