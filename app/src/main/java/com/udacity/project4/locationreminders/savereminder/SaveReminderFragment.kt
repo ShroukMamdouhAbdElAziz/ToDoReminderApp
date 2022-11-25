@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.Priority
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
@@ -20,7 +22,8 @@ class SaveReminderFragment : BaseFragment() {
     private lateinit var binding: FragmentSaveReminderBinding
 
     // request both permissions(foreground and background ) separately
-    private val foregroundPermissionRequestLauncher =
+
+    private val foregroundLocationPermissionRequest =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
                 || permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
@@ -39,6 +42,13 @@ class SaveReminderFragment : BaseFragment() {
                 // shouldShowRequestPermissionRationale() dialog explain to the user
             }
 
+        }
+
+
+    // location setting configuration launcher
+    private val locationRequestLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+            // enable location settings
         }
 
 
@@ -77,6 +87,29 @@ class SaveReminderFragment : BaseFragment() {
 //             2) save the reminder to the local db
         }
     }
+
+    fun createLocationRequest() {
+        LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
+            .setMaxUpdates(1)
+            .setMaxUpdateDelayMillis(500)
+            .setDurationMillis(1000)
+            .setWaitForAccurateLocation(false)
+            .build()
+    }
+
+    fun requestBackgroundPermission() {
+
+    }
+
+    fun requestForegroundPermission() {
+        foregroundLocationPermissionRequest.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
