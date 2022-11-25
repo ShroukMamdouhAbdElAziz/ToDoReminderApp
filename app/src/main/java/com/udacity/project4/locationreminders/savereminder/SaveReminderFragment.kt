@@ -114,25 +114,24 @@ class SaveReminderFragment : BaseFragment() {
     // and choosed donot ask again
     fun shouldAskForegroundPermission() {
 
-      val showRequestDialog = shouldShowRequestPermissionRationale(FOREGROUND_LOCATION_PERMISSIONS.toString())
+        val showRequestDialog =
+            shouldShowRequestPermissionRationale(FOREGROUND_LOCATION_PERMISSIONS.toString())
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && showRequestDialog){
-              diplayLocationPermisionDialog()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && showRequestDialog) {
+            displayLocationPermissionsDialog()
+        } else {
+            requestForegroundPermission()
         }
 
-
-
-
-
-        }
+    }
 
 
     private fun displayLocationPermissionsDialog() {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.location_required_error)
-            .setMessage(R.string.permission_rationale_dialog)
+            .setMessage(R.string.backgroundlocationpermission_rationale)
             .setPositiveButton("Accept") { _, _ ->
-             requestBackgroundPermission()
+                requestBackgroundPermission()
             }
             .show()
     }
@@ -141,8 +140,6 @@ class SaveReminderFragment : BaseFragment() {
     fun requestBackgroundPermission() {
         backgroundLocationPermissionRequest.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
     }
-
-
 
 
     override fun onDestroy() {
