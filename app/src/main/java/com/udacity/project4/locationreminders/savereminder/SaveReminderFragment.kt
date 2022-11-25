@@ -1,5 +1,6 @@
 package com.udacity.project4.locationreminders.savereminder
 
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,19 +19,27 @@ class SaveReminderFragment : BaseFragment() {
     override val _viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSaveReminderBinding
 
+    // request both permissions(foreground and background ) separately
+    private val foregroundPermissionRequestLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+                || permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
+            ) {
+                // enable location settings
+            } else {
+                // show snackbar location denied
+            }
+        }
 
     private val requestBackgroundPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()){ isGranted:Boolean ->
-            if (isGranted){
-              // continue the app workflow
-            }
-
-            else{
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                // continue the app workflow
+            } else {
                 // shouldShowRequestPermissionRationale() dialog explain to the user
             }
 
         }
-
 
 
     override fun onCreateView(
