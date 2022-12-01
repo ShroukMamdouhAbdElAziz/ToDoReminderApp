@@ -74,6 +74,7 @@ class GeofenceHelper(base: Context) : ContextWrapper(base) {
     companion object {
         private const val TAG = "GEOFENCE_HELPER"
         private const val REQUEST_CODE = 2607
+
     }
 
 

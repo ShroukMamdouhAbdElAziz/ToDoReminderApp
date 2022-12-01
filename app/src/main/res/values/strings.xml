@@ -15,6 +15,7 @@
     <string name="dropped_pin">Dropped Pin</string>
     <string name="save">Save</string>
     <string name="reminder_saved">Reminder Saved !</string>
+    <string name="reminder_not_saved"> location access is needed in order to create a reminder</string>
     <string name="logout">Logout</string>
     <string name="welcome_to_the_location_reminder_app">Welcome to the location reminder app</string>
     <string name="login">Login</string>
@@ -47,4 +48,5 @@
     <string name="location_disabled"> Location is disabled</string>
     <string name="permission_rationale_dialog">Your location permissions are requied to show your location on the map .</string>
     <string name="backgroundlocationpermission_rationale">background location permission is required in order to reminder you with your task </string>
+
 </resources>

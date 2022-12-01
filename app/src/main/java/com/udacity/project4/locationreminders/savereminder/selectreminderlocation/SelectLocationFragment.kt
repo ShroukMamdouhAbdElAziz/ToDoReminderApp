@@ -227,10 +227,12 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     fun initClickListener() {
         binding.saveButton.setOnClickListener {
-            if (mapMarker == null) {
-                _viewModel.showSnackBarInt.value = R.string.err_select_location
-            } else {
+            if (mapMarker != null) {
+                _viewModel.runSelectLocation(mapMarker!!.position, mapMarker!!.title)
                 _viewModel.navigationCommand.value = NavigationCommand.Back
+
+            } else {
+                _viewModel.showSnackBarInt.value = R.string.err_select_location
             }
         }
     }
@@ -314,9 +316,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
             mapMarker = setMarker(it, map)
 
-            //addCircle(it, GEOFENCE_RADIUS)
 
-            //  addGeofence(it, GEOFENCE_RADIUS)
         }
     }
 

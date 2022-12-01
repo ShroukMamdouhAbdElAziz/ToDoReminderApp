@@ -12,6 +12,7 @@ import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
+import com.udacity.project4.utils.sendNotification
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
 import org.koin.java.KoinJavaComponent.inject
@@ -72,20 +73,20 @@ class GeofenceBroadcastReceiver : BroadcastReceiver(), CoroutineScope {
 
 
     //TODO: get the request id of the current geofence
-    private fun sendNotification(triggeringGeofences: List<Geofence>) {
+    private fun sendGeofenceNotification(triggeringGeofences: List<Geofence>,context:Context) {
         val requestId = ""
 
         //Get the local repository instance
-        val remindersLocalRepository: ReminderDataSource by inject()
+        val remindersLocalRepository: ReminderDataSource by inject(ReminderDataSource::class.java)
 //        Interaction to the repository has to be through a coroutine scope
         CoroutineScope(coroutineContext).launch(SupervisorJob()) {
             //get the reminder with the request id
             val result = remindersLocalRepository.getReminder(requestId)
             if (result is Result.Success<ReminderDTO>) {
                 val reminderDTO = result.data
-                //send a notification to the user with the reminder details
-                sendNotification(
-                    this@GeofenceBroadcastReceiver, ReminderDataItem(
+                //send a notifica.tion to the user with the reminder details
+                sendNotification(context,
+                     ReminderDataItem(
                         reminderDTO.title,
                         reminderDTO.description,
                         reminderDTO.location,
