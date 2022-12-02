@@ -336,10 +336,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
 
     companion object {
-        private const val GEOFENCE_RADIUS = 200f
-
-        private const val GEOFENCE_ID = "SOME GEOFENCE_ID"
-        private val TAG = SelectLocationFragment::class.java.simpleName
 
         private val LOCATION_PERMISSIONS = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
