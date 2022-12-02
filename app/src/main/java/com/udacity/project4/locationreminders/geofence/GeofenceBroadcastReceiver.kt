@@ -8,7 +8,6 @@ import android.util.Log
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent
-import com.udacity.project4.R
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
@@ -38,9 +37,12 @@ class GeofenceBroadcastReceiver : BroadcastReceiver(), CoroutineScope {
         get() = Dispatchers.IO + coroutineJob
 
     override fun onReceive(context: Context, intent: Intent) {
+        Log.d("BroadcastReceiver","onReceive()")
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
         if (geofencingEvent != null) {
+            Log.d("BroadcastReceiver","geofencingEvent != null")
             if (geofencingEvent.hasError()) {
+                Log.d("BroadcastReceiver","geofencingEvent.hasError()")
                 val errorMessage = GeofenceStatusCodes
                     .getStatusCodeString(geofencingEvent.errorCode)
                 Log.e(TAG, errorMessage)
@@ -53,16 +55,16 @@ class GeofenceBroadcastReceiver : BroadcastReceiver(), CoroutineScope {
 
         // Test that the reported transition was of interest.
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
+            Log.d("BroadcastReceiver","enter geofenceTransition")
 
             // Get the geofences that were triggered. A single event can trigger
             // multiple geofences.
-            val triggeringGeofences = geofencingEvent.triggeringGeofences
 
             // Send notification
-            if (triggeringGeofences != null) {
-                triggeringGeofences.forEach {
-                    sendGeofenceNotification(it.requestId,context)
-                }
+            geofencingEvent.triggeringGeofences?.forEach {
+                Log.d("BroadcastReceiver","before sendNotification")
+                sendGeofenceNotification(it.requestId, context)
+                Log.d("BroadcastReceiver","after sendNotification")
             }
         }
 

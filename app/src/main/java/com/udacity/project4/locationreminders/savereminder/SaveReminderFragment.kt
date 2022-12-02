@@ -5,10 +5,11 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.Intent
-import android.content.IntentSender
+
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +26,6 @@ import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSaveReminderBinding
 import com.udacity.project4.locationreminders.geofence.GeofenceBroadcastReceiver
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
-import com.udacity.project4.locationreminders.savereminder.selectreminderlocation.SelectLocationFragment
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
 
@@ -100,39 +100,40 @@ class SaveReminderFragment : BaseFragment() {
 
         binding.saveReminder.setOnClickListener {
 
-            // TODO: use the user entered reminder details to:
-//             1) add a geofencing request
-//             2) save the reminder to the local db
+            Log.d("saveFragment","handling savebtn")
             requestLocationPermissions()
-            val reminderDataItem = _viewModel.reminderDataItem.value
-            if (reminderDataItem != null) {
-                _viewModel.validateAndSaveReminder(reminderDataItem)
-            }
 
         }
+
     }
 
     private fun requestForegroundLocationPermissions() {
+        Log.d("saveFragment"," requestFgPermissions()")
         val shouldShowRequestRationale =
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
                     || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestRationale) {
             displayLocationPermissionsDialog()
+            Log.d("saveFragment","after displayLocationDialog")
         } else {
             foregroundLocationPermissionRequest.launch(FOREGROUND_LOCATION_PERMISSIONS)
+            Log.d("saveFragment","launchFgPermission")
         }
     }
 
     private fun displayLocationPermissionsDialog() {
+        Log.d("saveFragment","enterDiplaydialogFun")
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.location_required_error)
             .setMessage(R.string.backgroundlocationpermission_rationale)
             .setPositiveButton("Accept") { _, _ ->
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     backgroundLocationPermissionRequest.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                    Log.d("saveFragment","enterDiplaydialogFun Bg")
                 } else {
                     foregroundLocationPermissionRequest.launch(FOREGROUND_LOCATION_PERMISSIONS)
+                    Log.d("saveFragment","enterDiplaydialogFun Fg")
                 }
 
             }
@@ -141,17 +142,21 @@ class SaveReminderFragment : BaseFragment() {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun requestBackgroundLocationPermission() {
-
+        Log.d("saveFragment","requestBackgroundLocationPermission()")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
             && shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         ) {
+
             displayLocationPermissionsDialog()
+            Log.d("saveFragment","requestBackgroundLocationPermission()/displayLocationPermissionsDialog")
         } else {
             backgroundLocationPermissionRequest.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+            Log.d("saveFragment","requestBackgroundLocationPermission()/backgroundLocationPermissionRequest")
         }
     }
 
     private fun requestLocationPermissions() {
+        Log.d("savefrag","requestLocationPermissions")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
@@ -177,16 +182,15 @@ class SaveReminderFragment : BaseFragment() {
 
 
     fun createLocationRequest(): LocationRequest {
+        Log.d("savefrag","createLocationRequest()")
         return LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
             .setMaxUpdates(1)
-            .setMaxUpdateDelayMillis(500)
-            .setDurationMillis(1000)
-            .setWaitForAccurateLocation(false)
             .build()
 
     }
 
     private fun enableLocationSettingsConfiguration() {
+        Log.d("savefrag","enableLocationSettingsConfiguration()")
         val locationRequest = createLocationRequest()
         // get the current location
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
@@ -195,22 +199,18 @@ class SaveReminderFragment : BaseFragment() {
         val task = client.checkLocationSettings(builder.build())
         task.addOnSuccessListener {
             if (it.locationSettingsStates?.isLocationUsable == true) {
-                addGeofence()
-
+                saveReminderItem()
             } else {
-                1
                 _viewModel.showSnackBarInt.value = R.string.reminder_not_saved
             }
         }
         task.addOnFailureListener {
             if (it is ResolvableApiException) {
-                try {
+
                     locationRequestLauncher.launch(
                         IntentSenderRequest.Builder(it.resolution.intentSender).build()
                     )
-                } catch (sendEx: IntentSender.SendIntentException) {
 
-                }
             } else {
                 _viewModel.showSnackBarInt.value = R.string.reminder_not_saved
             }
@@ -218,8 +218,21 @@ class SaveReminderFragment : BaseFragment() {
 
     }
 
+    private fun saveReminderItem() {
+        Log.d("saveFrag","saveReminderItem()")
+        val reminderDataItem = _viewModel.reminderDataItem.value
+        if (reminderDataItem != null
+            && _viewModel.isReminderValid(reminderDataItem)
+        ) {
+            _viewModel.saveReminder(reminderDataItem)
+            addGeofence()
+        }
+
+    }
+
 
     private fun createGeofenceObject(reminder: ReminderDataItem): List<Geofence> {
+        Log.d("saveFrag","createGeofenceObject()")
         geofenceList.add(
             Geofence.Builder().setRequestId(reminder.id)
                 .setCircularRegion(
@@ -235,6 +248,7 @@ class SaveReminderFragment : BaseFragment() {
     }
 
     private fun getGeofencingRequest(geofenceList: List<Geofence>): GeofencingRequest {
+        Log.d("saveFrag","getGeofencingRequest()")
 
         return GeofencingRequest.Builder().apply {
             setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
@@ -244,7 +258,7 @@ class SaveReminderFragment : BaseFragment() {
     }
 
     private fun getPendingIntent(): PendingIntent {
-
+        Log.d("saveFrag","getPendingIntent()")
         val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             requireContext(),
@@ -260,13 +274,11 @@ class SaveReminderFragment : BaseFragment() {
     }
 
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint("MissingPermission", "SuspiciousIndentation")
     private fun addGeofence() {
-        var reminderDataItem = _viewModel.reminderDataItem.value
-        if (reminderDataItem == null) {
-            _viewModel.showSnackBarInt.value = R.string.select_location
+        Log.d("saveFrag","addGeofence()")
+        val reminderDataItem = _viewModel.reminderDataItem.value!!
 
-        } else {
             _viewModel.saveReminder(reminderDataItem)
             val geofenceList = createGeofenceObject(reminderDataItem)
             val pendingIntent = getPendingIntent()
@@ -277,7 +289,7 @@ class SaveReminderFragment : BaseFragment() {
                 addOnFailureListener {
                     _viewModel.showSnackBarInt.value = R.string.geofences_not_added
                 }
-            }
+
         }
     }
 

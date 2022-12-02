@@ -10,6 +10,7 @@ import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
@@ -85,7 +86,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         setHasOptionsMenu(true)
 
         setDisplayHomeAsUpEnabled(true)
-        requestLocationPermissions()
+
 
         initClickListener()
 
@@ -94,15 +95,18 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
 
     fun createLocationRequest(): LocationRequest {
+        Log.d("select Fragment","createLocationRequest()")
         return LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
             .setMaxUpdates(1)
             .setMaxUpdateDelayMillis(500)
             .setDurationMillis(1000)
             .setWaitForAccurateLocation(false)
             .build()
+
     }
 
     fun enableCurrentLocationSettings() {
+        Log.d("select Fragment","enableCurrentLocationSettings()")
         val getLocationRequet = createLocationRequest()
         val builder = LocationSettingsRequest.Builder()
             .addLocationRequest(getLocationRequet)
@@ -118,13 +122,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         locationSettingsResponse.addOnFailureListener {
             if (it is ResolvableApiException) {
-                try {
+
                     locationRequestLauncher.launch(
                         IntentSenderRequest.Builder(it.resolution.intentSender).build()
                     )
-                } catch (sendEx: IntentSender.SendIntentException) {
 
-                }
             } else {
                 _viewModel.showSnackBarInt.value = R.string.location_disabled
             }
@@ -135,6 +137,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun getDeviceLastKnownLocation() {
+        Log.d("select Fragment","getDeviceLastKnownLocation()")
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         val locationResult: Task<Location> = fusedLocationClient.lastLocation
 
@@ -181,6 +184,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
 
     private fun moveCameraLocation(location: Location) {
+        Log.d("select Fragment","moveCameraLocation()")
         map.animateCamera(
             CameraUpdateFactory.newLatLngZoom(
                 LatLng(
@@ -193,6 +197,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun requestForegroundLocationPermissions() {
+        Log.d("select Fragment","requestForegroundLocationPermissions()")
         val shouldShowRequestRationale =
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
                     || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -205,6 +210,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun displayLocationPermissionsDialog() {
+        Log.d("select Fragment","displayLocationPermissionsDialog()")
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.location_required_error)
             .setMessage(R.string.permission_rationale_dialog)
@@ -215,6 +221,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun requestLocationPermissions() {
+        Log.d("select Fragment","requestLocationPermissions()")
         if (ActivityCompat.checkSelfPermission(
                 requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
@@ -226,6 +233,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     fun initClickListener() {
+        Log.d("select Fragment","initClickListener()")
         binding.saveButton.setOnClickListener {
             if (mapMarker != null) {
                 _viewModel.runSelectLocation(mapMarker!!.position, mapMarker!!.title)
@@ -259,25 +267,17 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
 
     override fun onMapReady(googleMap: GoogleMap) {
+        Log.d("select Fragment","onMapReady()")
         map = googleMap
 
-
-        val lattitude = 31.251980417667017
-        val longitude = 29.974141512614484
-
-        // to control how zoomed in the map
-        val zoomLevel = 15f
-
-
-        // Add a marker in this location and move the camera
-        val homeLatLng = LatLng(lattitude, longitude)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
-        map.moveCamera(CameraUpdateFactory.newLatLng(homeLatLng))
         // customize the styling of the base map using a JSON object
         // defined in a raw resource file
         setMapLongClick(map)
         setPoiClick(map)
         setMapStyle(map)
+        Log.d("select Fragment","requestLocationPermissions() callback in onMapReady before")
+        requestLocationPermissions()
+        Log.d("select Fragment","requestLocationPermissions() callback in onMapReady after")
 
 
     }
@@ -294,6 +294,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun setMarker(latLng: LatLng, map: GoogleMap): Marker? {
+        Log.d("select Fragment","setMarker()")
+
         // to diplay the coordinates of selected location
         val snippet = String.format(
             Locale.getDefault(), "Lat: %1$.5f , Long: %2$.5f", latLng.latitude, latLng.longitude
@@ -308,6 +310,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     //to add marker when the user touches and holds on the map to place a marker at a location on the map
     private fun setMapLongClick(map: GoogleMap) {
         map.setOnMapClickListener {
+            Log.d("select Fragment","setMapLongClick()")
 
             // remove the old marker and geofence circle
 
@@ -322,6 +325,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     private fun setPoiClick(map: GoogleMap) {
         map.setOnPoiClickListener {
+            Log.d("select Fragment","setOnPoiClickListener()")
             mapMarker?.remove()
             mapMarker = map.addMarker(
                 MarkerOptions().position(it.latLng).title(it.name)
