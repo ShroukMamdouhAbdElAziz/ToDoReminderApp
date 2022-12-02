@@ -38,11 +38,16 @@ class GeofenceBroadcastReceiver : BroadcastReceiver(), CoroutineScope {
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("BroadcastReceiver","onReceive()")
+
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
         if (geofencingEvent != null) {
+
             Log.d("BroadcastReceiver","geofencingEvent != null")
+
             if (geofencingEvent.hasError()) {
+
                 Log.d("BroadcastReceiver","geofencingEvent.hasError()")
+
                 val errorMessage = GeofenceStatusCodes
                     .getStatusCodeString(geofencingEvent.errorCode)
                 Log.e(TAG, errorMessage)
