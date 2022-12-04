@@ -10,6 +10,7 @@ import com.udacity.project4.locationreminders.data.dto.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
@@ -28,11 +29,11 @@ import java.io.IOException
 @MediumTest
 class RemindersLocalRepositoryTest {
 
-    private lateinit var remindersDatabase: RemindersDatabase
-    private lateinit var remindersLocalRepository: RemindersLocalRepository
-
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    private lateinit var remindersDatabase: RemindersDatabase
+    private lateinit var remindersLocalRepository: RemindersLocalRepository
 
 
     @Before
@@ -54,7 +55,7 @@ class RemindersLocalRepositoryTest {
 
     @Test
     @Throws(Exception::class)
-    fun insertReminder_getRemindersByID() = runBlocking {
+    fun insertReminder_getRemindersByID() = runTest {
 
         // GIVEN
         val fakeReminderDto = ReminderDTO(
@@ -70,15 +71,14 @@ class RemindersLocalRepositoryTest {
     }
 
     @Test
-    @Throws(Exception::class)
-    fun unSavedReminder_returnNull() = runTest {
+    fun getNotFoundReminder_returnNull() = runTest {
 
         // GIVEN
         val reminderID = "reminderTwo"
         // When
         val result = remindersLocalRepository.getReminder(reminderID)
 
-        assertThat(result, `is`(Result.Error("data not found")))
+        assertThat(result, `is`(Result.Error("Reminder not found!")))
     }
 
 

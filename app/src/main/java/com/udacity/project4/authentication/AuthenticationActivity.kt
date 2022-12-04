@@ -27,7 +27,6 @@ class AuthenticationActivity : AppCompatActivity() {
     lateinit var binding: ActivityAuthenticationBinding
 
 
-
     private val signInLauncher =
         registerForActivityResult(FirebaseAuthUIActivityResultContract()) { result: FirebaseAuthUIAuthenticationResult? ->
             val response = result!!.idpResponse

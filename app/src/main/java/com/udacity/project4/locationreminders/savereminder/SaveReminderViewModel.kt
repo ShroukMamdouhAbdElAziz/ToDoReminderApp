@@ -23,16 +23,9 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
      * Clear the live data objects to start fresh next time the view model gets called
      */
     fun onClear() {
-        reminderDataItem.value= null
-
+        reminderDataItem.value = null
     }
 
-
-    fun runSelectLocation( lat:LatLng,location:String ?= null) {
-        reminderDataItem.value!!.latitude = lat.latitude
-        reminderDataItem.value!!.longitude = lat.longitude
-        reminderDataItem.value?.location = location ?: "${lat.latitude}, ${lat.longitude}"
-    }
     /**
      * Save the reminder to the data source
      */
@@ -69,5 +62,13 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
             return false
         }
         return true
+    }
+
+    // to set the selected location whenn theuser select POI or long click
+
+    fun runSelectLocation(lat: LatLng, location: String? = null) {
+        reminderDataItem.value!!.latitude = lat.latitude
+        reminderDataItem.value!!.longitude = lat.longitude
+        reminderDataItem.value?.location = location ?: "${lat.latitude}, ${lat.longitude}"
     }
 }

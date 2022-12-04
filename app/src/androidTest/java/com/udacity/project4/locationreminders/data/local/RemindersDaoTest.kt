@@ -8,7 +8,6 @@ import androidx.test.filters.SmallTest
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.*
 import org.junit.After
 import org.junit.Before
@@ -35,21 +34,19 @@ class RemindersDaoTest {
         remindersDatabase = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             RemindersDatabase::class.java
-        ).allowMainThreadQueries().build()
+        ).build()
 
         remindersDao = remindersDatabase.reminderDao()
     }
 
 
     @After
-    @Throws(IOException::class)
     fun closeDatabase() {
         remindersDatabase.close()
     }
 
 
     @Test
-    @Throws(Exception::class)
     fun insertReminder_getRemindersByID() = runTest {
         val fakeReminderDto = ReminderDTO(
             "fakeReminder", "this is a fake one for test", "location", 500.0, 500.0, "reminderOne"
@@ -72,7 +69,6 @@ class RemindersDaoTest {
 
 
     @Test
-    @Throws(Exception::class)
     fun unSavedReminder_returnNull() = runTest {
         val reminderID = "reminderTwo"
         val expectedReminder = remindersDao.getReminderById(reminderID)
