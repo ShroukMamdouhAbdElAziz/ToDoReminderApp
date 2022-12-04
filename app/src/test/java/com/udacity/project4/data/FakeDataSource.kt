@@ -5,21 +5,47 @@ import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
 
 // use FakeDataSource to test ReminderLocalRepository
-class FakeDataSource(var reminderDto:MutableList<ReminderDTO>?= mutableListOf()) :ReminderDataSource {
+class FakeDataSource(private var reminderDto: MutableList<ReminderDTO> = mutableListOf()) :
+    ReminderDataSource {
+
+    private var isErrorOccured = true
+
+    fun setErrorOccured(isErrorOccured: Boolean) {
+        this.isErrorOccured = isErrorOccured
+
+    }
 
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
-        TODO("Not yet implemented")
+        return if (isErrorOccured) {
+            Result.Error("Error occurred while retrieving the Reminders")
+        } else {
+            Result.Success(reminderDto)
+        }
     }
 
     override suspend fun saveReminder(reminder: ReminderDTO) {
-        TODO("Not yet implemented")
+          reminderDto.add(reminder)
     }
+
 
     override suspend fun getReminder(id: String): Result<ReminderDTO> {
-        TODO("Not yet implemented")
+
+      return  if (!isErrorOccured) {
+            var reminder = reminderDto.find {
+                it.id == id
+            }
+            if (reminder != null) {
+                Result.Success(reminder)
+            } else {
+                Result.Error("Reminder not found!")
+            }
+        } else {
+            Result.Error("Error occurred")
+        }
     }
 
+
     override suspend fun deleteAllReminders() {
-        TODO("Not yet implemented")
+        reminderDto.clear()
     }
 }

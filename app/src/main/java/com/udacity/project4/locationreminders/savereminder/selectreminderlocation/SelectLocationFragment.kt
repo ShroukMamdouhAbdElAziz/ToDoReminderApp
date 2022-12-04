@@ -117,6 +117,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         locationSettingsResponse.addOnSuccessListener {
             // All location settings are satisfied
+            Log.d("select Fragment","locationSettingsResponse.addOnSuccessListener")
             getDeviceLastKnownLocation()
         }
 
@@ -141,11 +142,13 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         val locationResult: Task<Location> = fusedLocationClient.lastLocation
 
+        map.isMyLocationEnabled = true
+
         locationResult.addOnCompleteListener {
             val lastKnownLocation = it.result
 
             if (it.isSuccessful) {
-                map.uiSettings.isMyLocationButtonEnabled = true
+                map.isMyLocationEnabled = true
 
                 // in case lastKnownLocatio  is not Null
                 if (lastKnownLocation != null) {
@@ -236,6 +239,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         Log.d("select Fragment","initClickListener()")
         binding.saveButton.setOnClickListener {
             if (mapMarker != null) {
+                Log.d("select Fragment","$mapMarker")
                 _viewModel.runSelectLocation(mapMarker!!.position, mapMarker!!.title)
                 _viewModel.navigationCommand.value = NavigationCommand.Back
 
@@ -309,13 +313,12 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     //to add marker when the user touches and holds on the map to place a marker at a location on the map
     private fun setMapLongClick(map: GoogleMap) {
-        map.setOnMapClickListener {
+        map.setOnMapLongClickListener {
             Log.d("select Fragment","setMapLongClick()")
 
-            // remove the old marker and geofence circle
 
-            //   mapMarker?.remove()
-            map.clear()
+              mapMarker?.remove()
+           // map.clear()
 
             mapMarker = setMarker(it, map)
 

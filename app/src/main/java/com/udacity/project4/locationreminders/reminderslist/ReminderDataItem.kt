@@ -8,7 +8,7 @@ import java.util.*
 /**
  * data class acts as a data mapper between the DB and the UI
  */
-@Parcelize
+
 data class ReminderDataItem(
     var title: String?=null,
     var description: String?=null,
@@ -16,4 +16,4 @@ data class ReminderDataItem(
     var latitude: Double?=null,
     var longitude: Double?=null,
     val id: String = UUID.randomUUID().toString()
-) : Parcelable
+) : Serializable

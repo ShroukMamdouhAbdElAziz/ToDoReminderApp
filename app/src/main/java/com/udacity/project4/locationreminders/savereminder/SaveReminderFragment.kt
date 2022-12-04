@@ -94,6 +94,7 @@ class SaveReminderFragment : BaseFragment() {
         binding.lifecycleOwner = this
         binding.selectLocation.setOnClickListener {
             //            Navigate to another fragment to get the user location
+
             _viewModel.navigationCommand.value =
                 NavigationCommand.To(SaveReminderFragmentDirections.actionSaveReminderFragmentToSelectLocationFragment())
         }
@@ -284,9 +285,11 @@ class SaveReminderFragment : BaseFragment() {
             val pendingIntent = getPendingIntent()
             geofencingClient.addGeofences(getGeofencingRequest(geofenceList), pendingIntent).run {
                 addOnSuccessListener {
+                    Log.d("saveFrag","GeofenceAdded")
                     _viewModel.showSnackBarInt.value = R.string.reminder_saved
                 }
                 addOnFailureListener {
+                    Log.d("saveFrag","GeofenceNotAdded")
                     _viewModel.showSnackBarInt.value = R.string.geofences_not_added
                 }
 
