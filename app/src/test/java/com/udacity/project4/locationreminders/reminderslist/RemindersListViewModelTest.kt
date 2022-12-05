@@ -9,6 +9,8 @@ import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.testutils.MainCoroutineRule
 import com.udacity.project4.testutils.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.pauseDispatcher
+import kotlinx.coroutines.test.resumeDispatcher
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
@@ -50,6 +52,16 @@ class RemindersListViewModelTest{
         remindersListViewModel.loadReminders()
         assertThat(remindersListViewModel.showSnackBar.getOrAwaitValue(), `is` ("Error occurred while retrieving the Reminders"))
 
+    }
+
+    @Test
+    fun loadReminders_checkLoading() {
+        mainCoroutineRule.pauseDispatcher()
+        remindersListViewModel.loadReminders()
+        assertThat(remindersListViewModel.showLoading.getOrAwaitValue(), `is`(true))
+        // hiding the progress loading
+        mainCoroutineRule.resumeDispatcher()
+        assertThat(remindersListViewModel.showLoading.getOrAwaitValue(), `is`(false))
     }
 
 }

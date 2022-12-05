@@ -14,7 +14,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.IOException
 import org.hamcrest.MatcherAssert.assertThat
 
 @ExperimentalCoroutinesApi
@@ -34,7 +33,7 @@ class RemindersDaoTest {
         remindersDatabase = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             RemindersDatabase::class.java
-        ).build()
+        ).allowMainThreadQueries().build()
 
         remindersDao = remindersDatabase.reminderDao()
     }
@@ -69,7 +68,7 @@ class RemindersDaoTest {
 
 
     @Test
-    fun unSavedReminder_returnNull() = runTest {
+    fun unExistedReminder_returnNull() = runTest {
         val reminderID = "reminderTwo"
         val expectedReminder = remindersDao.getReminderById(reminderID)
 
