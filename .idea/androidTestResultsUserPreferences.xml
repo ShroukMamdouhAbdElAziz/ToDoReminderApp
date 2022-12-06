@@ -3,7 +3,33 @@
   <component name="AndroidTestResultsUserPreferences">
     <option name="androidTestResultsTableState">
       <map>
+        <entry key="-2040345632">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_3_API_27_emulator" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="-1795617473">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_3_API_27_emulator" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="-547119156">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
@@ -31,12 +57,29 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-86718481">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="GUDE7SQ4LNFEEYIN" value="120" />
+                  <entry key="OPPO&#10; CPH1823" value="120" />
+                  <entry key="Pixel_3_API_27_emulator" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="110941273">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="GUDE7SQ4LNFEEYIN" value="120" />
+                  <entry key="OPPO&#10; CPH1823" value="120" />
                   <entry key="Pixel_3_API_27_emulator" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
@@ -78,6 +121,19 @@
                   <entry key="Duration" value="90" />
                   <entry key="GUDE7SQ4LNFEEYIN" value="120" />
                   <entry key="OPPO&#10; CPH1823" value="120" />
+                  <entry key="Pixel_3_API_27_emulator" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="839652141">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
                   <entry key="Pixel_3_API_27_emulator" value="120" />
                   <entry key="Tests" value="360" />
                 </map>

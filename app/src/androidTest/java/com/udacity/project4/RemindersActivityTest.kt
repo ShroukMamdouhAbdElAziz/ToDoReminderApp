@@ -1,16 +1,18 @@
 package com.udacity.project4
 
 
+
 import android.Manifest
 import android.app.Application
+import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
-import androidx.test.espresso.Espresso.closeSoftKeyboard
+import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.filters.LargeTest
 import com.udacity.project4.locationreminders.RemindersActivity
@@ -38,32 +40,24 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.rule.GrantPermissionRule
 import com.google.android.material.internal.ContextUtils.getActivity
+import kotlinx.coroutines.delay
 import org.junit.Rule
 import org.hamcrest.Matchers.not
 
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class RemindersActivityTest : AutoCloseKoinTest() {
+class RemindersActivityTest:AutoCloseKoinTest()  {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
-
-    @Rule
-    @JvmField
-    var grantPermissionRule =
-        GrantPermissionRule.grant(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        )
 
 
     private lateinit var applicationContext: Application
     private val dataBindingIdlingResource = DataBindingIdlingResource()
     private lateinit var reminderDataRepository: ReminderDataSource
+    private lateinit var decorView :View
 
 
     @Before
@@ -76,7 +70,7 @@ class RemindersActivityTest : AutoCloseKoinTest() {
             //Declare a ViewModel - be later inject into Fragment with dedicated injector using by viewModel()
             viewModel {
                 RemindersListViewModel(
-                    get(),
+                    applicationContext,
                     get() as ReminderDataSource
                 )
             }
@@ -84,7 +78,7 @@ class RemindersActivityTest : AutoCloseKoinTest() {
             single {
                 //This view model is declared singleton to be used across multiple fragments
                 SaveReminderViewModel(
-                    get(),
+                    applicationContext,
                     get() as ReminderDataSource
                 )
             }
@@ -98,11 +92,6 @@ class RemindersActivityTest : AutoCloseKoinTest() {
             modules(listOf(myModule))
         }
 
-
-    }
-
-    @Before
-    fun initRepo() {
         reminderDataRepository = get()
 
         //remove the previous reminders
@@ -110,6 +99,16 @@ class RemindersActivityTest : AutoCloseKoinTest() {
             reminderDataRepository.deleteAllReminders()
         }
     }
+
+  //  @Before
+   /* fun initRepo() {
+        reminderDataRepository = get()
+
+        //remove the previous reminders
+        runBlocking {
+            reminderDataRepository.deleteAllReminders()
+        }
+    }*/
 
 
     @Before
@@ -159,40 +158,51 @@ class RemindersActivityTest : AutoCloseKoinTest() {
     @Test
     fun testReminderActivity_setInitialReminder()  {
         // Start up Tasks screen.
-        val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
-        dataBindingIdlingResource.monitorActivity(activityScenario)
+        launchActivity<RemindersActivity>().use { scenario ->
+            dataBindingIdlingResource.monitorActivity(scenario)
+
+            scenario.onActivity { activity ->
+                decorView = activity.window.decorView
+            }
+
+          //  val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+      //  dataBindingIdlingResource.monitorActivity(activityScenario)
 
         // starting open  the screen for first time without any data existing
         onView(withId(R.id.noDataTextView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        // click on add button
+        // click on add button  - reminderlistfrag
         onView(withId(R.id.addReminderFAB)).perform(click())
+
+        // write the details
+        onView(withId(R.id.reminderTitle))
+            .perform(typeText("reminderOne"))
+
+        onView(withId(R.id.reminderDescription)).perform(typeText(" Go to Gym"))
 
         // click on selectlocation button
         onView(withId(R.id.selectLocation)).perform(click())
 
-        // write the details
-        onView(withId(R.id.reminderTitle)).perform(typeText("reminder title"))
-        onView(withId(R.id.reminderDescription)).perform(typeText(" reminder Description"))
-        // close the keyboard
-        closeSoftKeyboard()
-
+            runBlocking {
+                delay(5000)
+            }
         // set the location on map
         onView(withId(R.id.map)).perform(click())
         // save the selected location on map (save btn on map)
         onView(withId(R.id.save_button)).perform(click())
 
         // save the item
-        onView(withId(R.id.saveReminder)).perform(click())
+            onView(withId(R.id.saveReminder)).check(matches(isDisplayed()))
         // show the toast once the save is done
-        onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(getActivity(applicationContext)!!.window.decorView))).check(
+        onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(decorView))).check(
             matches(isDisplayed())
         )
 
+
       // validate the data
-        onView(withId(R.id.title)).check(matches(withText("reminder title")))
-        onView(withId(R.id.description)).check(matches(withText(" reminder Description")))
+        onView(withId(R.id.title)).check(matches(withText("reminderOne")))
+        onView(withId(R.id.description)).check(matches(withText(" Go to Gym")))
 
     }
 
 
-}
+}}

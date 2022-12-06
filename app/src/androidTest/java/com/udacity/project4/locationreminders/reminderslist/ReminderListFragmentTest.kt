@@ -8,6 +8,7 @@ import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
@@ -50,30 +51,25 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
 
+
+
     private lateinit var applicationContext: Application
     private val dataBindingIdlingResource = DataBindingIdlingResource()
     private lateinit var reminderDataRepository: ReminderDataSource
 
-    @Rule
-    @JvmField
-    var grantPermissionRule =
-        GrantPermissionRule.grant(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        )
+
 
     @Before
     fun init() {
         // Stop koin app.
         stopKoin()
-        applicationContext = ApplicationProvider.getApplicationContext()
+        applicationContext = getApplicationContext()
 
         val myModule = module {
             //Declare a ViewModel - be later inject into Fragment with dedicated injector using by viewModel()
             viewModel {
                 RemindersListViewModel(
-                    get(),
+                    applicationContext,
                     get() as ReminderDataSource
                 )
             }
@@ -81,7 +77,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
             single {
                 //This view model is declared singleton to be used across multiple fragments
                 SaveReminderViewModel(
-                    get(),
+                    applicationContext,
                     get() as ReminderDataSource
                 )
             }
@@ -95,11 +91,6 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
             modules(listOf(myModule))
         }
 
-
-    }
-
-    @Before
-    fun initRepo() {
         reminderDataRepository = get()
 
         //remove the previous reminders
@@ -107,6 +98,16 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
             reminderDataRepository.deleteAllReminders()
         }
     }
+
+   // @Before
+  /*  fun initRepo() {
+        reminderDataRepository = get()
+
+        //remove the previous reminders
+        runBlocking {
+            reminderDataRepository.deleteAllReminders()
+        }
+    }*/
 
 
     @Before
@@ -123,7 +124,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun setInitialReminder_verifyData() = runTest {
+    fun setInitialReminder_verifyData():Unit = runTest {
         // set initial reminder
         val reminder = ReminderDTO(
             "fake Reminder",
@@ -151,18 +152,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun clickAddReminderButton_navigateToSaveReminderFragment() = runTest {
-
-    /*    //GIVEN  set initial reminder
-        val reminderDto = ReminderDTO(
-            "fake ReminderDto",
-            "this is a fake reminderDto",
-            "location2",
-            200.0,
-            200.0,
-            "reminder2"
-        )
-        reminderDataRepository.saveReminder(reminderDto)*/
+    fun clickAddReminderButton_navigateToSaveReminderFragment() {
 
         val fragmentScenario =
             launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)

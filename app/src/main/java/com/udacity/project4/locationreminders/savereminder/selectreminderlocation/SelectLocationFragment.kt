@@ -98,9 +98,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         Log.d("select Fragment","createLocationRequest()")
         return LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
             .setMaxUpdates(1)
-            .setMaxUpdateDelayMillis(500)
-            .setDurationMillis(1000)
-            .setWaitForAccurateLocation(false)
             .build()
 
     }
@@ -180,7 +177,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                     )
                 }
             } else {
-                map.uiSettings.isMyLocationButtonEnabled = false
+                map.isMyLocationEnabled = false
             }
         }
     }

@@ -103,7 +103,6 @@ class SaveReminderFragment : BaseFragment() {
 
             Log.d("saveFragment","handling savebtn")
             requestLocationPermissions()
-
         }
 
     }

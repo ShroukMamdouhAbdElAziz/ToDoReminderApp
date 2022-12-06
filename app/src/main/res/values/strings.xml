@@ -47,7 +47,7 @@
     <string name="location_denied">Location Denied</string>
     <string name="location_disabled"> Location is disabled</string>
     <string name="no_location_access_granted">No Location access Granted</string>
-    <string name="permission_rationale_dialog">Your location permissions are requied to show your location on the map .</string>
+    <string name="permission_rationale_dialog">Your location permissions are requied to get your location on the map in order to create a reminder further .</string>
     <string name="backgroundlocationpermission_rationale">background location permission is required in order to reminder you with your task </string>
 
 </resources>
