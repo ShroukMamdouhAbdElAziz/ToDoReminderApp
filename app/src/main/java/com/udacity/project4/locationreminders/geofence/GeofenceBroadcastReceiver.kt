@@ -37,16 +37,16 @@ class GeofenceBroadcastReceiver : BroadcastReceiver(), CoroutineScope {
         get() = Dispatchers.IO + coroutineJob
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("BroadcastReceiver","onReceive()")
+        Log.d("BroadcastReceiver", "onReceive()")
 
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
         if (geofencingEvent != null) {
 
-            Log.d("BroadcastReceiver","geofencingEvent != null")
+            Log.d("BroadcastReceiver", "geofencingEvent != null")
 
             if (geofencingEvent.hasError()) {
 
-                Log.d("BroadcastReceiver","geofencingEvent.hasError()")
+                Log.d("BroadcastReceiver", "geofencingEvent.hasError()")
 
                 val errorMessage = GeofenceStatusCodes
                     .getStatusCodeString(geofencingEvent.errorCode)
@@ -60,25 +60,23 @@ class GeofenceBroadcastReceiver : BroadcastReceiver(), CoroutineScope {
 
         // Test that the reported transition was of interest.
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
-            Log.d("BroadcastReceiver","enter geofenceTransition")
+            Log.d("BroadcastReceiver", "enter geofenceTransition")
 
-            // Get the geofences that were triggered. A single event can trigger
             // multiple geofences.
 
             // Send notification
             geofencingEvent.triggeringGeofences?.forEach {
-                Log.d("BroadcastReceiver","before sendNotification")
+                Log.d("BroadcastReceiver", "before sendNotification")
                 sendGeofenceNotification(it.requestId, context)
-                Log.d("BroadcastReceiver","after sendNotification")
+                Log.d("BroadcastReceiver", "after sendNotification")
             }
         }
 
     }
 
 
-
-    //TODO: get the request id of the current geofence
-    private fun sendGeofenceNotification(geofenceRequestId: String,context:Context) {
+    //get the request id of the current geofence
+    private fun sendGeofenceNotification(geofenceRequestId: String, context: Context) {
 
         //Get the local repository instance
         val remindersLocalRepository: ReminderDataSource by inject(ReminderDataSource::class.java)
@@ -89,8 +87,9 @@ class GeofenceBroadcastReceiver : BroadcastReceiver(), CoroutineScope {
             if (result is Result.Success<ReminderDTO>) {
                 val reminderDTO = result.data
                 //send a notifica.tion to the user with the reminder details
-                sendNotification(context,
-                     ReminderDataItem(
+                sendNotification(
+                    context,
+                    ReminderDataItem(
                         reminderDTO.title,
                         reminderDTO.description,
                         reminderDTO.location,

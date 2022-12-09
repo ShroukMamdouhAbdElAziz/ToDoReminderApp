@@ -64,7 +64,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         return true
     }
 
-    // to set the selected location whenn theuser select POI or long click
+    // to set the selected location when the user select POI or long click
 
     fun runSelectLocation(lat: LatLng, location: String? = null) {
         reminderDataItem.value!!.latitude = lat.latitude

@@ -18,6 +18,7 @@ class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
         // Context of the app under test.
+        // getting app context using a InstrumentationRegistry using android framework code
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("com.udacity.project4", appContext.packageName)
     }

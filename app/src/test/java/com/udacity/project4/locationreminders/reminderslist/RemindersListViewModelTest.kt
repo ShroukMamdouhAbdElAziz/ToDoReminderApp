@@ -24,7 +24,8 @@ import org.mockito.kotlin.mock
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-class RemindersListViewModelTest{
+// unit Test(local test) for the reminderListViewModel and liveData
+class RemindersListViewModelTest {
 
     // execute every method in the test synchronously using Architecture components
     @get:Rule
@@ -38,29 +39,43 @@ class RemindersListViewModelTest{
     private lateinit var reminderFakeDataSource: FakeDataSource
 
 
-    // get fresh view model before every fun test
+    // get a fresh view model before every fun test
     @Before
-    fun setupViewModel(){
+    fun setupViewModel() {
         stopKoin()
-      reminderFakeDataSource = FakeDataSource()
-        remindersListViewModel= RemindersListViewModel(ApplicationProvider.getApplicationContext(),reminderFakeDataSource)
+        reminderFakeDataSource = FakeDataSource()
+        remindersListViewModel = RemindersListViewModel(
+            ApplicationProvider.getApplicationContext(),
+            reminderFakeDataSource
+        )
     }
 
     @Test
-    fun loadReminders_shouldReturnError(){
+    fun loadReminders_shouldReturnError() {
+        // GIVEN - setErrorOccurred() to true
         reminderFakeDataSource.setErrorOccured(true)
+        // WHEN - loading reminders
         remindersListViewModel.loadReminders()
-        assertThat(remindersListViewModel.showSnackBar.getOrAwaitValue(), `is` ("Error occurred while retrieving the Reminders"))
+
+        //THEN showSnackBar with this Error
+        assertThat(
+            remindersListViewModel.showSnackBar.getOrAwaitValue(),
+            `is`("Error occurred while retrieving the Reminders")
+        )
 
     }
 
     @Test
     fun loadReminders_checkLoading() {
+        // GIVEN
         mainCoroutineRule.pauseDispatcher()
+        // WHEN - loading reminders
         remindersListViewModel.loadReminders()
+        // THEN _ show the progress loading
         assertThat(remindersListViewModel.showLoading.getOrAwaitValue(), `is`(true))
-        // hiding the progress loading
+
         mainCoroutineRule.resumeDispatcher()
+        // THEN - hiding the progress loading
         assertThat(remindersListViewModel.showLoading.getOrAwaitValue(), `is`(false))
     }
 

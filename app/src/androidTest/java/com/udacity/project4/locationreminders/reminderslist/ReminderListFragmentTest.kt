@@ -50,13 +50,9 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-
-
-
     private lateinit var applicationContext: Application
     private val dataBindingIdlingResource = DataBindingIdlingResource()
     private lateinit var reminderDataRepository: ReminderDataSource
-
 
 
     @Before
@@ -99,16 +95,6 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
         }
     }
 
-   // @Before
-  /*  fun initRepo() {
-        reminderDataRepository = get()
-
-        //remove the previous reminders
-        runBlocking {
-            reminderDataRepository.deleteAllReminders()
-        }
-    }*/
-
 
     @Before
     fun registerIdlingResource() {
@@ -124,7 +110,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun setInitialReminder_verifyData():Unit = runTest {
+    fun setInitialReminder_verifyData(): Unit = runTest {
         // set initial reminder
         val reminder = ReminderDTO(
             "fake Reminder",
@@ -149,6 +135,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
         onView(ViewMatchers.withId(R.id.location))
             .check(ViewAssertions.matches(ViewMatchers.withText("location1")))
 
+        fragmentScenario.close()
     }
 
     @Test
@@ -171,6 +158,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
         verify(navController).navigate(
             ReminderListFragmentDirections.toSaveReminder()
         )
+        fragmentScenario.close()
     }
 
 }

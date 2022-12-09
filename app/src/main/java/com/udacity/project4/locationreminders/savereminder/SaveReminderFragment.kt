@@ -101,39 +101,39 @@ class SaveReminderFragment : BaseFragment() {
 
         binding.saveReminder.setOnClickListener {
 
-            Log.d("saveFragment","handling savebtn")
+            Log.d("saveFragment", "handling savebtn")
             requestLocationPermissions()
         }
 
     }
 
     private fun requestForegroundLocationPermissions() {
-        Log.d("saveFragment"," requestFgPermissions()")
+        Log.d("saveFragment", " requestFgPermissions()")
         val shouldShowRequestRationale =
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
                     || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestRationale) {
             displayLocationPermissionsDialog()
-            Log.d("saveFragment","after displayLocationDialog")
+            Log.d("saveFragment", "after displayLocationDialog")
         } else {
             foregroundLocationPermissionRequest.launch(FOREGROUND_LOCATION_PERMISSIONS)
-            Log.d("saveFragment","launchFgPermission")
+            Log.d("saveFragment", "launchFgPermission")
         }
     }
 
     private fun displayLocationPermissionsDialog() {
-        Log.d("saveFragment","enterDiplaydialogFun")
+        Log.d("saveFragment", "enterDiplaydialogFun")
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.location_required_error)
             .setMessage(R.string.backgroundlocationpermission_rationale)
             .setPositiveButton("Accept") { _, _ ->
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     backgroundLocationPermissionRequest.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-                    Log.d("saveFragment","enterDiplaydialogFun Bg")
+                    Log.d("saveFragment", "enterDiplaydialogFun Bg")
                 } else {
                     foregroundLocationPermissionRequest.launch(FOREGROUND_LOCATION_PERMISSIONS)
-                    Log.d("saveFragment","enterDiplaydialogFun Fg")
+                    Log.d("saveFragment", "enterDiplaydialogFun Fg")
                 }
 
             }
@@ -142,21 +142,27 @@ class SaveReminderFragment : BaseFragment() {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun requestBackgroundLocationPermission() {
-        Log.d("saveFragment","requestBackgroundLocationPermission()")
+        Log.d("saveFragment", "requestBackgroundLocationPermission()")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
             && shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         ) {
 
             displayLocationPermissionsDialog()
-            Log.d("saveFragment","requestBackgroundLocationPermission()/displayLocationPermissionsDialog")
+            Log.d(
+                "saveFragment",
+                "requestBackgroundLocationPermission()/displayLocationPermissionsDialog"
+            )
         } else {
             backgroundLocationPermissionRequest.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-            Log.d("saveFragment","requestBackgroundLocationPermission()/backgroundLocationPermissionRequest")
+            Log.d(
+                "saveFragment",
+                "requestBackgroundLocationPermission()/backgroundLocationPermissionRequest"
+            )
         }
     }
 
     private fun requestLocationPermissions() {
-        Log.d("savefrag","requestLocationPermissions")
+        Log.d("savefrag", "requestLocationPermissions")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
@@ -182,7 +188,7 @@ class SaveReminderFragment : BaseFragment() {
 
 
     fun createLocationRequest(): LocationRequest {
-        Log.d("savefrag","createLocationRequest()")
+        Log.d("savefrag", "createLocationRequest()")
         return LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
             .setMaxUpdates(1)
             .build()
@@ -190,7 +196,7 @@ class SaveReminderFragment : BaseFragment() {
     }
 
     private fun enableLocationSettingsConfiguration() {
-        Log.d("savefrag","enableLocationSettingsConfiguration()")
+        Log.d("savefrag", "enableLocationSettingsConfiguration()")
         val locationRequest = createLocationRequest()
         // get the current location
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
@@ -207,9 +213,9 @@ class SaveReminderFragment : BaseFragment() {
         task.addOnFailureListener {
             if (it is ResolvableApiException) {
 
-                    locationRequestLauncher.launch(
-                        IntentSenderRequest.Builder(it.resolution.intentSender).build()
-                    )
+                locationRequestLauncher.launch(
+                    IntentSenderRequest.Builder(it.resolution.intentSender).build()
+                )
 
             } else {
                 _viewModel.showSnackBarInt.value = R.string.reminder_not_saved
@@ -219,7 +225,7 @@ class SaveReminderFragment : BaseFragment() {
     }
 
     private fun saveReminderItem() {
-        Log.d("saveFrag","saveReminderItem()")
+        Log.d("saveFrag", "saveReminderItem()")
         val reminderDataItem = _viewModel.reminderDataItem.value
         if (reminderDataItem != null
             && _viewModel.isReminderValid(reminderDataItem)
@@ -232,7 +238,7 @@ class SaveReminderFragment : BaseFragment() {
 
 
     private fun createGeofenceObject(reminder: ReminderDataItem): List<Geofence> {
-        Log.d("saveFrag","createGeofenceObject()")
+        Log.d("saveFrag", "createGeofenceObject()")
         geofenceList.add(
             Geofence.Builder().setRequestId(reminder.id)
                 .setCircularRegion(
@@ -248,7 +254,7 @@ class SaveReminderFragment : BaseFragment() {
     }
 
     private fun getGeofencingRequest(geofenceList: List<Geofence>): GeofencingRequest {
-        Log.d("saveFrag","getGeofencingRequest()")
+        Log.d("saveFrag", "getGeofencingRequest()")
 
         return GeofencingRequest.Builder().apply {
             setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
@@ -258,7 +264,7 @@ class SaveReminderFragment : BaseFragment() {
     }
 
     private fun getPendingIntent(): PendingIntent {
-        Log.d("saveFrag","getPendingIntent()")
+        Log.d("saveFrag", "getPendingIntent()")
         val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             requireContext(),
@@ -276,21 +282,21 @@ class SaveReminderFragment : BaseFragment() {
 
     @SuppressLint("MissingPermission", "SuspiciousIndentation")
     private fun addGeofence() {
-        Log.d("saveFrag","addGeofence()")
+        Log.d("saveFrag", "addGeofence()")
         val reminderDataItem = _viewModel.reminderDataItem.value!!
 
-            _viewModel.saveReminder(reminderDataItem)
-            val geofenceList = createGeofenceObject(reminderDataItem)
-            val pendingIntent = getPendingIntent()
-            geofencingClient.addGeofences(getGeofencingRequest(geofenceList), pendingIntent).run {
-                addOnSuccessListener {
-                    Log.d("saveFrag","GeofenceAdded")
-                    _viewModel.showSnackBarInt.value = R.string.reminder_saved
-                }
-                addOnFailureListener {
-                    Log.d("saveFrag","GeofenceNotAdded")
-                    _viewModel.showSnackBarInt.value = R.string.geofences_not_added
-                }
+        _viewModel.saveReminder(reminderDataItem)
+        val geofenceList = createGeofenceObject(reminderDataItem)
+        val pendingIntent = getPendingIntent()
+        geofencingClient.addGeofences(getGeofencingRequest(geofenceList), pendingIntent).run {
+            addOnSuccessListener {
+                Log.d("saveFrag", "GeofenceAdded")
+                _viewModel.showSnackBarInt.value = R.string.reminder_saved
+            }
+            addOnFailureListener {
+                Log.d("saveFrag", "GeofenceNotAdded")
+                _viewModel.showSnackBarInt.value = R.string.geofences_not_added
+            }
 
         }
     }

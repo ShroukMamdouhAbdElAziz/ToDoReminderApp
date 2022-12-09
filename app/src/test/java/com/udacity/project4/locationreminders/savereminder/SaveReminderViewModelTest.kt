@@ -28,8 +28,9 @@ import org.robolectric.annotation.Config
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-@Config(manifest= Config.NONE)
-class SaveReminderViewModelTest{
+@Config(manifest = Config.NONE)
+// unit test (local test) for SaveReminderViewModel and liveData
+class SaveReminderViewModelTest {
 
     // execute every method in the test synchronously using Architecture components
     @get:Rule
@@ -45,63 +46,84 @@ class SaveReminderViewModelTest{
     private lateinit var reminderFakeDataSource: FakeDataSource
 
 
-    // get fresh view model before every fun test
+    // get a fresh view model before every fun test
     @Before
-    fun setupViewModel(){
+    fun setupViewModel() {
         stopKoin()
         applicationContext = mock {
             on { getString(R.string.reminder_saved) } doReturn "Reminder Saved !"
         }
 
         reminderFakeDataSource = FakeDataSource()
-       saveReminderViewModel= SaveReminderViewModel(applicationContext,reminderFakeDataSource)
+        saveReminderViewModel = SaveReminderViewModel(applicationContext, reminderFakeDataSource)
     }
 
     @Test
     fun insertReminder_saveReminder() {
-        // GIVEN
-        val fakeReminderDataItem = ReminderDataItem("reminder", "This is a fake reminder data item", "location", 500.0, 500.0,"reminderOne")
+        // GIVEN - fakeReminderDataItem
+        val fakeReminderDataItem = ReminderDataItem(
+            "reminder",
+            "This is a fake reminder data item",
+            "location",
+            500.0,
+            500.0,
+            "reminderOne"
+        )
 
-        // WHEN
+        // WHEN - saving this item
         saveReminderViewModel.saveReminder(fakeReminderDataItem)
 
         // THEN
-      assertThat(saveReminderViewModel.showLoading.getOrAwaitValue(),`is`(false))
-      assertThat(saveReminderViewModel.showToast.getOrAwaitValue(),`is`("Reminder Saved !"))
+        assertThat(saveReminderViewModel.showLoading.getOrAwaitValue(), `is`(false))
+        assertThat(saveReminderViewModel.showToast.getOrAwaitValue(), `is`("Reminder Saved !"))
 
     }
 
     @Test
-    fun validateReminder_emptyTitleReminder_returnFalse(){
-        // Given
-        val fakeReminderDataItem = ReminderDataItem("", "This is a fake reminder data item", "location", 500.0, 500.0,"reminderOne")
-        // WHEN
-       val result= saveReminderViewModel.isReminderValid(fakeReminderDataItem)
-
-        assertThat(saveReminderViewModel.showSnackBarInt.getOrAwaitValue(),`is`(R.string.err_enter_title))
-        assertThat(result , `is`(false))
+    fun validateReminder_emptyTitleReminder_returnFalse() {
+        // GIVEN - fakeReminderDataItem with empty title
+        val fakeReminderDataItem = ReminderDataItem(
+            "",
+            "This is a fake reminder data item",
+            "location",
+            500.0,
+            500.0,
+            "reminderOne"
+        )
+        // WHEN _ validating the data
+        val result = saveReminderViewModel.isReminderValid(fakeReminderDataItem)
+        // THEN returning false
+        assertThat(
+            saveReminderViewModel.showSnackBarInt.getOrAwaitValue(),
+            `is`(R.string.err_enter_title)
+        )
+        assertThat(result, `is`(false))
 
 
     }
 
     @Test
-    fun validateReminder_emptyLocationReminder_returnFalse(){
-        // Given
-        val fakeReminderDataItem = ReminderDataItem("reminder", "This is a fake reminder data item", "", 500.0, 500.0,"reminderOne")
-        // WHEN
-        val result= saveReminderViewModel.isReminderValid(fakeReminderDataItem)
-
-        assertThat(saveReminderViewModel.showSnackBarInt.getOrAwaitValue(),`is`(R.string.err_select_location))
-        assertThat(result , `is`(false))
+    fun validateReminder_emptyLocationReminder_returnFalse() {
+        // GIVEN - fakeReminderDataItem with empty location
+        val fakeReminderDataItem = ReminderDataItem(
+            "reminder",
+            "This is a fake reminder data item",
+            "",
+            500.0,
+            500.0,
+            "reminderOne"
+        )
+        // WHEN- validating the data
+        val result = saveReminderViewModel.isReminderValid(fakeReminderDataItem)
+        // THEN
+        assertThat(
+            saveReminderViewModel.showSnackBarInt.getOrAwaitValue(),
+            `is`(R.string.err_select_location)
+        )
+        assertThat(result, `is`(false))
 
 
     }
-
-
-
-
-
-
 
 
 }

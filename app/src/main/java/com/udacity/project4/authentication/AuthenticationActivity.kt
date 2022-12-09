@@ -35,7 +35,7 @@ class AuthenticationActivity : AppCompatActivity() {
                 // Successfully signed in
                 startActivity(Intent(this, RemindersActivity::class.java))
                 finish()
-                Log.d(TAG,"successful login")
+                Log.d(TAG, "successful login")
 
             } else {
                 // Sign in failed
@@ -61,7 +61,7 @@ class AuthenticationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding= ActivityAuthenticationBinding.inflate(layoutInflater)
+        binding = ActivityAuthenticationBinding.inflate(layoutInflater)
         val view = binding.root
 
         val auth = FirebaseAuth.getInstance()
@@ -72,16 +72,13 @@ class AuthenticationActivity : AppCompatActivity() {
             startActivity(intent)
 
         } else {
-            //  TODO: If the user wasn't authenticated before, send him to Login
+           //If the user wasn't authenticated before, send him to Login
             setContentView(view)
             startLogin()
 
         }
 
     }
-
-
-
 
 
     private val providers = listOf(
@@ -112,7 +109,7 @@ class AuthenticationActivity : AppCompatActivity() {
 
 
     private fun showSnackbar(message: String) {
-        Snackbar.make(binding.root,message, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
     }
 }
 
