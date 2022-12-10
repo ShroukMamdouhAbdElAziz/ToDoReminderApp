@@ -2,6 +2,7 @@ package com.udacity.project4.utils
 
 import androidx.test.espresso.idling.CountingIdlingResource
 
+//Espresso idling resources to act as a synchronization mechanism for Espresso
 object EspressoIdlingResource {
 
     private const val RESOURCE = "GLOBAL"

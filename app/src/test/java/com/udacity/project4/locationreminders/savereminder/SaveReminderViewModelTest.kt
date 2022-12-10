@@ -5,6 +5,7 @@ import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SmallTest
 import com.udacity.project4.R
 import com.udacity.project4.data.FakeDataSource
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
@@ -29,6 +30,7 @@ import org.robolectric.annotation.Config
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 @Config(manifest = Config.NONE)
+@SmallTest
 // unit test (local test) for SaveReminderViewModel and liveData
 class SaveReminderViewModelTest {
 
@@ -92,7 +94,7 @@ class SaveReminderViewModelTest {
         )
         // WHEN _ validating the data
         val result = saveReminderViewModel.isReminderValid(fakeReminderDataItem)
-        // THEN returning false
+        // THEN
         assertThat(
             saveReminderViewModel.showSnackBarInt.getOrAwaitValue(),
             `is`(R.string.err_enter_title)

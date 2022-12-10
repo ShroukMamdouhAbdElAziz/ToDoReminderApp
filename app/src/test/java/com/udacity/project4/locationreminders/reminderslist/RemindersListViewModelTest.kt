@@ -3,6 +3,7 @@ package com.udacity.project4.locationreminders.reminderslist
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SmallTest
 import com.udacity.project4.R
 import com.udacity.project4.data.FakeDataSource
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
@@ -11,6 +12,8 @@ import com.udacity.project4.testutils.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.pauseDispatcher
 import kotlinx.coroutines.test.resumeDispatcher
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
@@ -24,6 +27,7 @@ import org.mockito.kotlin.mock
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
+@SmallTest
 // unit Test(local test) for the reminderListViewModel and liveData
 class RemindersListViewModelTest {
 
@@ -50,6 +54,7 @@ class RemindersListViewModelTest {
         )
     }
 
+    // Test error handling
     @Test
     fun loadReminders_shouldReturnError() {
         // GIVEN - setErrorOccurred() to true
@@ -65,6 +70,7 @@ class RemindersListViewModelTest {
 
     }
 
+    // Test loading handling
     @Test
     fun loadReminders_checkLoading() {
         // GIVEN

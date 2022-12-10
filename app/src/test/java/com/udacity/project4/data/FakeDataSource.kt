@@ -4,12 +4,14 @@ import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
 
-//Use FakeDataSource that acts as a test double to the LocalDataSource
+//Use FakeDataSource as a test double for the LocalDataSource
+// unit test
 class FakeDataSource(private var reminderDto: MutableList<ReminderDTO> = mutableListOf()) :
     ReminderDataSource {
 
     private var isErrorOccured = true
 
+    // used for testing error handling
     fun setErrorOccured(isErrorOccured: Boolean) {
         this.isErrorOccured = isErrorOccured
 

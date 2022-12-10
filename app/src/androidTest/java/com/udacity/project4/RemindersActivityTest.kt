@@ -49,6 +49,7 @@ import org.hamcrest.Matchers.not
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
+// End to end test - to test the whole app behavior
 class RemindersActivityTest : AutoCloseKoinTest() {
 
     @get:Rule
@@ -56,6 +57,8 @@ class RemindersActivityTest : AutoCloseKoinTest() {
 
 
     private lateinit var applicationContext: Application
+
+    // An Idling Resource that waits for Data Binding to have no pending bindings
     private val dataBindingIdlingResource = DataBindingIdlingResource()
     private lateinit var reminderDataRepository: ReminderDataSource
     private lateinit var decorView: View
@@ -63,7 +66,7 @@ class RemindersActivityTest : AutoCloseKoinTest() {
 
     @Before
     fun init() {
-        // Stop koin app.
+        // Stop the original koin app.
         stopKoin()
         applicationContext = getApplicationContext()
 
@@ -102,13 +105,20 @@ class RemindersActivityTest : AutoCloseKoinTest() {
     }
 
 
+    /**
+     * Idling resources tell Espresso that the app is idle or busy. This is needed when operations
+     * are not scheduled in the main Looper (for example when executed on a different thread).
+     */
+
     @Before
     fun registerIdlingResource() {
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         IdlingRegistry.getInstance().register(dataBindingIdlingResource)
     }
 
-
+    /**
+     * Unregister your idling resource so it can be garbage collected and does not leak any memory.
+     */
     @After
     fun unregisterIdlingResource() {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
@@ -118,7 +128,7 @@ class RemindersActivityTest : AutoCloseKoinTest() {
     // starting the test from the beginning without any reminders items existing
     @Test
     fun testReminderActivity_setInitialReminder() {
-        // Start up Tasks screen.
+        // GIVEN - launch reminder screen with no reminders.
         launchActivity<RemindersActivity>().use { scenario ->
             dataBindingIdlingResource.monitorActivity(scenario)
 
@@ -129,7 +139,7 @@ class RemindersActivityTest : AutoCloseKoinTest() {
 
             // starting open  the screen for first time without any data existing
             onView(withId(R.id.noDataTextView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-            // click on add button  - reminderlistfrag
+            // WHEN click on add button in reminder list fragment and fill the title and description text field
             onView(withId(R.id.addReminderFAB)).perform(click())
 
             // write the details
@@ -149,7 +159,7 @@ class RemindersActivityTest : AutoCloseKoinTest() {
 
             // save the item
             onView(withId(R.id.saveReminder)).perform(click())
-            // show the toast once the save is done
+            // THEN show the toast once the save is done and validate the data if uts correct as entered
             onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(decorView))).check(
                 matches(isDisplayed())
             )
@@ -158,7 +168,8 @@ class RemindersActivityTest : AutoCloseKoinTest() {
             // validate the data
             onView(withId(R.id.title)).check(matches(withText("reminderOne")))
             onView(withId(R.id.description)).check(matches(withText(" Go to Gym")))
-
+            // Make sure the activity is closed before resetting the db
+            scenario.close()
 
         }
 
@@ -166,10 +177,12 @@ class RemindersActivityTest : AutoCloseKoinTest() {
 
     @Test
     fun testSnackBar_noTitleEntered() {
+        // GIVEN - launch reminder screen with no reminders.
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
         dataBindingIdlingResource.monitorActivity(activityScenario)
-
+        // WHEN click on add reminder button enter the details without the title
         onView(withId(R.id.addReminderFAB)).perform(click())
+
         onView(withId(R.id.reminderDescription)).perform(
             typeText(" Go to school")
         )
@@ -181,6 +194,7 @@ class RemindersActivityTest : AutoCloseKoinTest() {
             delay(2000)
 
         }
+        //THEN Showing snack bar with this MSG R.string.err_enter_title
         onView(withId(id.snackbar_text)).check(matches(withText(R.string.err_enter_title)))
 
         activityScenario.close()
@@ -188,9 +202,10 @@ class RemindersActivityTest : AutoCloseKoinTest() {
 
     @Test
     fun testSnackBar_nolocationSelected() {
+        // GIVEN - launch reminder screen with no reminders.
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
         dataBindingIdlingResource.monitorActivity(activityScenario)
-
+        // WHEN click on add reminder button enter the details without the location
         onView(withId(R.id.addReminderFAB)).perform(click())
 
         onView(withId(R.id.reminderTitle))
@@ -203,7 +218,7 @@ class RemindersActivityTest : AutoCloseKoinTest() {
         Espresso.closeSoftKeyboard()
 
         onView(withId(R.id.saveReminder)).perform(click())
-
+        //THEN Showing snack bar with this MSG R.string.err_select_location
         onView(withId(id.snackbar_text)).check(matches(withText(R.string.err_select_location)))
 
         activityScenario.close()

@@ -19,6 +19,7 @@ import org.hamcrest.MatcherAssert.assertThat
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 @SmallTest
+// unit test (local test) to test DAO
 class RemindersDaoTest {
 
     private lateinit var remindersDatabase: RemindersDatabase
@@ -30,6 +31,8 @@ class RemindersDaoTest {
 
     @Before
     fun setUpDatabase() {
+        // Using an in-memory database so that the information stored here disappears when the
+        // process is killed
         remindersDatabase = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             RemindersDatabase::class.java
@@ -47,17 +50,17 @@ class RemindersDaoTest {
 
     @Test
     fun insertReminder_getRemindersByID() = runTest {
+        //GIVEN  a reminder saved in the database
         val fakeReminderDto = ReminderDTO(
             "fakeReminder", "this is a fake one for test", "location", 500.0, 500.0, "reminderOne"
         )
-        // GIVEN insert reminder
+
         remindersDao.saveReminder(fakeReminderDto)
 
-
-        // WHEN get reminder by ID
+        // WHEN get reminder by ID from the database
         val reminder = remindersDao.getReminderById(fakeReminderDto.id)
 
-        // THEN
+        // THEN same reminder details are retrieved
         assertThat(reminder, notNullValue())
         assertThat(reminder?.title, `is`(fakeReminderDto.title))
         assertThat(reminder?.description, `is`(fakeReminderDto.description))
@@ -69,9 +72,11 @@ class RemindersDaoTest {
 
     @Test
     fun unExistedReminder_returnNull() = runTest {
+        // GIVEN a reminder ID which doesn't exist in the database
         val reminderID = "reminderTwo"
+        // When trying to retrieve this reminder item which doesn't exist
         val expectedReminder = remindersDao.getReminderById(reminderID)
-
+        //THEN the expected value isa null
         assertThat(expectedReminder, nullValue())
     }
 

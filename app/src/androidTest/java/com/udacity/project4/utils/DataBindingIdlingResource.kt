@@ -10,6 +10,8 @@ import androidx.test.espresso.IdlingResource
 import com.udacity.project4.locationreminders.reminderslist.ReminderListFragment
 import java.util.UUID
 
+// custom idling resource for data binding
+// Espresso uses a different mechanism than data binding, so it is not aware of data binding changes.
 class DataBindingIdlingResource : IdlingResource {
     // List of registered callbacks
     private val idlingCallbacks = mutableListOf<IdlingResource.ResourceCallback>()

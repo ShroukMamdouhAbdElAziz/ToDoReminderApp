@@ -45,6 +45,7 @@ import org.mockito.Mockito.verify
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
+// Fragment - viewModel pair integration Test - UI Testing
 class ReminderListFragmentTest : AutoCloseKoinTest() {
 
     @get:Rule
@@ -57,7 +58,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
 
     @Before
     fun init() {
-        // Stop koin app.
+        // Stop the original koin app.
         stopKoin()
         applicationContext = getApplicationContext()
 
@@ -86,7 +87,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
         startKoin {
             modules(listOf(myModule))
         }
-
+         // get repository
         reminderDataRepository = get()
 
         //remove the previous reminders
@@ -111,7 +112,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
 
     @Test
     fun setInitialReminder_verifyData(): Unit = runTest {
-        // set initial reminder
+        //GIVEN  set initial reminder and add it to the database
         val reminder = ReminderDTO(
             "fake Reminder",
             "this is a fake reminder",
@@ -121,17 +122,29 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
             "reminder1"
         )
         reminderDataRepository.saveReminder(reminder)
-
+        // WHEN _ReminderListFragment launched to display reminder data verify it
         val fragmentScenario =
             launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
 
         dataBindingIdlingResource.monitorFragment(fragmentScenario)
 
-        // Click on the reminder and verify that all the data is correct.
+        // THEN the inserted reminder data will be displayed on the screen as the same of it
+        // make sure that the title,description,location are both shown and  correct .
+        onView(ViewMatchers.withId(R.id.title))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
         onView(ViewMatchers.withId(R.id.title))
             .check(ViewAssertions.matches(ViewMatchers.withText("fake Reminder")))
+
+        onView(ViewMatchers.withId(R.id.description))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
         onView(ViewMatchers.withId(R.id.description))
             .check(ViewAssertions.matches(ViewMatchers.withText("this is a fake reminder")))
+
+        onView(ViewMatchers.withId(R.id.location))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
         onView(ViewMatchers.withId(R.id.location))
             .check(ViewAssertions.matches(ViewMatchers.withText("location1")))
 
@@ -140,7 +153,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
 
     @Test
     fun clickAddReminderButton_navigateToSaveReminderFragment() {
-
+        // GIVEN -reminder screen with no reminders.
         val fragmentScenario =
             launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
 
@@ -154,7 +167,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
         // WHEN click on add button
         onView(withId(R.id.addReminderFAB)).perform(click())
 
-        // THEN verify navigation to saveFragment
+        // THEN verify that we navigate to saveReminder screen without any data
         verify(navController).navigate(
             ReminderListFragmentDirections.toSaveReminder()
         )

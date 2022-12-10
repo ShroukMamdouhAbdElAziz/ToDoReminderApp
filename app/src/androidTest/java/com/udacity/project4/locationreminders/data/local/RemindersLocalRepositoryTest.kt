@@ -27,6 +27,7 @@ import java.io.IOException
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 @MediumTest
+// to test the repository
 class RemindersLocalRepositoryTest {
 
     @get:Rule
@@ -57,7 +58,7 @@ class RemindersLocalRepositoryTest {
     @Throws(Exception::class)
     fun insertReminder_getRemindersByID() = runTest {
 
-        // GIVEN
+       //GIVEN  a reminder saved in the database
         val fakeReminderDto = ReminderDTO(
             "fakeReminder", "this is a fake one for test", "location", 500.0, 500.0, "reminderOne"
         )
@@ -66,18 +67,18 @@ class RemindersLocalRepositoryTest {
         // WHEN get reminder by ID
         val result = remindersLocalRepository.getReminder(fakeReminderDto.id)
 
-        // THEN.
+        // THEN the result  is the fake data which inserted above
         assertThat(result, `is`(Result.Success(fakeReminderDto)))
     }
 
     @Test
     fun getNotFoundReminder_returnNull() = runTest {
 
-        // GIVEN
+        // GIVEN a reminder ID which doesn't exist in the database
         val reminderID = "reminderTwo"
-        // When
+        // When trying to retrieve this reminder item which doesn't exist
         val result = remindersLocalRepository.getReminder(reminderID)
-
+        //THEN the result will be error msg Reminder not found!
         assertThat(result, `is`(Result.Error("Reminder not found!")))
     }
 
