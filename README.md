@@ -72,7 +72,6 @@ Navgraph for Nativgation
 
 ![Screenshot_2022-12-11-17-59-17-86_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915809-5808f283-a077-425e-bc8b-7ba9f525041d.jpg)
 
-![Screenshot_2022-12-11-17-59-35-23_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915814-3eedb32f-1ebd-4e93-bf6b-bbf66f3d649d.jpg)
 
 
 
