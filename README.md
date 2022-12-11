@@ -46,4 +46,6 @@ MVVM architecture design pattern
 Navgraph for Nativgation
 
 # Screen shots
+![Screenshot_2022-12-11-17-54-11-30_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915303-52246d70-f28d-4ac4-9610-78d70a51d0f6.jpg)
+
 
