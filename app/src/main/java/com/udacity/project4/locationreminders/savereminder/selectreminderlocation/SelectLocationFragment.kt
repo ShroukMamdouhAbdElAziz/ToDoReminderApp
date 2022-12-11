@@ -247,6 +247,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.map_options, menu)
+    }
+
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             // change the map type based on the user's selection
@@ -265,7 +270,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         }
         return true
     }
-
 
     override fun onMapReady(googleMap: GoogleMap) {
         Log.d("select Fragment", "onMapReady()")
