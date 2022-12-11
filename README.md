@@ -46,6 +46,41 @@ MVVM architecture design pattern
 Navgraph for Nativgation
 
 # Screen shots
-![Screenshot_2022-12-11-17-54-11-30_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915303-52246d70-f28d-4ac4-9610-78d70a51d0f6.jpg)
+![Screenshot_2022-12-11-17-54-06-40_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915393-2ef165bf-7ac2-44e7-bfb4-7e0665e30106.jpg)
+
+![Screenshot_2022-12-11-17-54-11-30_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915413-35d22a0d-d4c8-4b7b-8132-dca92b4c9fce.jpg)
+
+![Screenshot_2022-12-11-17-54-25-36_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915422-a335a37a-a4e2-485c-bff6-97daf93ec0ce.jpg)
+
+![Screenshot_2022-12-11-17-54-35-70_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915688-a2882331-0470-41d0-8563-5cb1f9310e02.jpg)
+
+![Screenshot_2022-12-11-17-54-42-73_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915696-20079231-feec-443f-a19b-de8632e44b60.jpg)
+
+![Screenshot_2022-12-11-17-55-08-98](https://user-images.githubusercontent.com/104698688/206915733-a920952b-7a62-4040-8d4d-015a26ce1c8b.jpg)
+
+![Screenshot_2022-12-11-17-55-39-43_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915749-a2846d22-3cec-46bd-b8e3-056c9a7fe010.jpg)
+
+![Screenshot_2022-12-11-17-55-48-14_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915759-6ffc5fdf-5277-4d26-8ac4-acfa9fc681ad.jpg)
+
+![Screenshot_2022-12-11-17-56-17-42_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915772-653a32ce-17bc-43bd-9091-e74fdc67bd38.jpg)
+
+![Screenshot_2022-12-11-17-56-23-27](https://user-images.githubusercontent.com/104698688/206915777-11e83969-8757-4b42-9bf5-1975edd375e8.jpg)
+
+![Screenshot_2022-12-11-17-56-32-03_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915790-a64c9881-525d-4ea1-8281-d8ff10e1a1b2.jpg)
+
+![Screenshot_2022-12-11-17-57-35-94_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915800-3814665f-76f6-4383-ba3d-411b411ca115.jpg)
+
+![Screenshot_2022-12-11-17-59-17-86_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915809-5808f283-a077-425e-bc8b-7ba9f525041d.jpg)
+
+![Screenshot_2022-12-11-17-59-35-23_c3d04dcd0dbe6e67b5f0559813e08ab1](https://user-images.githubusercontent.com/104698688/206915814-3eedb32f-1ebd-4e93-bf6b-bbf66f3d649d.jpg)
+
+
+
+
+\
+
+
+
+
 
 
