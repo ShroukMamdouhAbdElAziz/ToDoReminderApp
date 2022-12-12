@@ -266,6 +266,7 @@ class SaveReminderFragment : BaseFragment() {
     private fun getPendingIntent(): PendingIntent {
         Log.d("saveFrag", "getPendingIntent()")
         val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
+
         val pendingIntent = PendingIntent.getBroadcast(
             requireContext(),
             0,
@@ -314,6 +315,7 @@ class SaveReminderFragment : BaseFragment() {
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
         private const val GEOFENCE_RADIUS_IN_METERS = 500f
+
 
     }
 }
