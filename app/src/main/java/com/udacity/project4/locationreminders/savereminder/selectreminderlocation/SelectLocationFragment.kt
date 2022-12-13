@@ -3,6 +3,7 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.IntentSender
 import android.content.pm.PackageManager
@@ -62,7 +63,16 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     private val locationRequestLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
-            enableCurrentLocationSettings()
+            // user refused to enable current location
+            if (it.resultCode == Activity.RESULT_CANCELED) {
+                // enableCurrentLocationSettings()
+                _viewModel.showToast.value =
+                    "For better experience you should enable your current location to get it on the map "
+
+            } else if (it.resultCode == Activity.RESULT_OK) {
+                getDeviceLastKnownLocation()
+            }
+
         }
 
 
@@ -102,6 +112,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     }
 
+
     fun enableCurrentLocationSettings() {
         Log.d("select Fragment", "enableCurrentLocationSettings()")
         val getLocationRequet = createLocationRequest()
@@ -139,6 +150,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         val locationResult: Task<Location> = fusedLocationClient.lastLocation
 
+        // to show the current location icon only
         map.isMyLocationEnabled = true
 
         locationResult.addOnCompleteListener {
@@ -229,6 +241,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             requestForegroundLocationPermissions()
         } else {
             enableCurrentLocationSettings()
+
         }
     }
 
