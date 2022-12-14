@@ -76,7 +76,7 @@ class SaveReminderFragment : BaseFragment() {
 
                 } else if (it.resultCode == Activity.RESULT_OK) {
                     saveReminderItem()
-                    //enableLocationSettingsConfiguration()
+                   // enableLocationSettingsConfiguration()
                 }
         }
 
