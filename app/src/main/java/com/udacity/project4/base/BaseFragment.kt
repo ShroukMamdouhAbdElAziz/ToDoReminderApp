@@ -1,5 +1,6 @@
 package com.udacity.project4.base
 
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -41,4 +42,6 @@ abstract class BaseFragment : Fragment() {
             }
         })
     }
+
+
 }

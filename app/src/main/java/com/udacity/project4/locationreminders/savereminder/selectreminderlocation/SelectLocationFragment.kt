@@ -55,7 +55,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
                 result[Manifest.permission.ACCESS_COARSE_LOCATION] == true
             ) {
-                enableCurrentLocationSettings()
+                enableDeviceCurrentLocation()
+                // enableCurrentLocationSettings()
             } else {
                 _viewModel.showSnackBarInt.value = R.string.location_denied
             }
@@ -68,11 +69,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
                 _viewModel.showToast.value =
                     "For better experience you should enable your current location to get it on the map "
-
-            } else if (it.resultCode == Activity.RESULT_OK) {
-                getDeviceLastKnownLocation()
             }
-
         }
 
 
@@ -112,7 +109,25 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     }
 
-    fun enableCurrentLocationSettings() {
+
+    // to show the current location icon in all cases
+    // if user doesn't accept the current location at first then changed his mind , then he can press on it
+    @SuppressLint("MissingPermission")
+    private fun enableDeviceCurrentLocation() {
+        map.isMyLocationEnabled = true
+
+        // for when user taps My Location button while device location is off
+        map.setOnMyLocationButtonClickListener {
+            enableCurrentLocationSettings()
+            false
+        }
+
+        enableCurrentLocationSettings()
+        getDeviceLastKnownLocation()
+    }
+
+
+    private fun enableCurrentLocationSettings() {
         Log.d("select Fragment", "enableCurrentLocationSettings()")
         val getLocationRequet = createLocationRequest()
         val builder = LocationSettingsRequest.Builder()
@@ -122,11 +137,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         val locationSettingsResponse = LocationServices.getSettingsClient(requireContext())
             .checkLocationSettings(builder.build())
 
-        locationSettingsResponse.addOnSuccessListener {
-            // All location settings are satisfied
-            Log.d("select Fragment", "locationSettingsResponse.addOnSuccessListener")
-            getDeviceLastKnownLocation()
-        }
+        /* locationSettingsResponse.addOnSuccessListener {
+             // All location settings are satisfied
+             Log.d("select Fragment", "locationSettingsResponse.addOnSuccessListener")
+             getDeviceLastKnownLocation()
+         }*/
 
         locationSettingsResponse.addOnFailureListener {
             if (it is ResolvableApiException) {
@@ -149,7 +164,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         val locationResult: Task<Location> = fusedLocationClient.lastLocation
 
-        map.isMyLocationEnabled = true
+        //    map.isMyLocationEnabled = true
 
         locationResult.addOnCompleteListener {
             val lastKnownLocation = it.result
@@ -238,11 +253,13 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         ) {
             requestForegroundLocationPermissions()
         } else {
-            enableCurrentLocationSettings()
+            //  enableCurrentLocationSettings()
+            enableDeviceCurrentLocation()
+
         }
     }
 
-    fun initClickListener() {
+    private fun initClickListener() {
         Log.d("select Fragment", "initClickListener()")
         binding.saveButton.setOnClickListener {
             if (mapMarker != null) {
