@@ -29,7 +29,6 @@ import com.udacity.project4.locationreminders.geofence.GeofenceBroadcastReceiver
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
-import kotlin.math.log
 
 class SaveReminderFragment : BaseFragment() {
     //Get the view model this time as a single to be shared with the another fragment
@@ -46,8 +45,7 @@ class SaveReminderFragment : BaseFragment() {
                 || permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
             ) {
                 // enable location settings
-                //enableLocationSettingsConfiguration()
-                Log.d("foregroud" ,"foregroundPermission is tested ")
+                enableLocationSettingsConfiguration()
             } else {
                 // no location access granted
                 _viewModel.showSnackBarInt.value = R.string.no_location_access_granted
@@ -60,8 +58,7 @@ class SaveReminderFragment : BaseFragment() {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
                 // continue the app workflow
-                //enableLocationSettingsConfiguration()
-                Log.d("background ","background is granted")
+                enableLocationSettingsConfiguration()
             } else {
                 _viewModel.showSnackBarInt.value = R.string.no_location_access_granted
             }
@@ -70,16 +67,17 @@ class SaveReminderFragment : BaseFragment() {
 
 
     // location setting configuration launcher
-   private val locationRequestLauncher =
+    private val locationRequestLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
-            if (it.resultCode == Activity.RESULT_CANCELED) {
-                // enableCurrentLocationSettings()
-                _viewModel.showToast.value =
-                    "To save your reminder , you need to turn on your location settings "
 
-            } else if (it.resultCode == Activity.RESULT_OK) {
-                saveReminderItem()
-            }
+                if (it.resultCode == Activity.RESULT_CANCELED) {
+                    _viewModel.showToast.value =
+                        "To save your reminder , you need to turn on your location settings "
+
+                } else if (it.resultCode == Activity.RESULT_OK) {
+                    saveReminderItem()
+                    //enableLocationSettingsConfiguration()
+                }
         }
 
 
@@ -111,15 +109,8 @@ class SaveReminderFragment : BaseFragment() {
 
         binding.saveReminder.setOnClickListener {
 
-            Log.d("savebtn", "handling savebtn")
-           if (requestLocationPermissions()) {
-
-               Log.d("savebtn", " requestLocationPermission() returns true")
-               enableLocationSettingsConfiguration()
-           }
-            else{
-               Log.d("savebtn", " requestLocationPermission() returns false")
-            }
+            Log.d("saveFragment", "handling savebtn")
+            requestLocationPermissions()
         }
 
     }
@@ -178,10 +169,7 @@ class SaveReminderFragment : BaseFragment() {
         }
     }
 
-    private fun requestLocationPermissions() :Boolean{
-        var foregroundVariable = false
-        var backgroundVariable = false
-
+    private fun requestLocationPermissions() {
         Log.d("savefrag", "requestLocationPermissions")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (ActivityCompat.checkSelfPermission(
@@ -191,12 +179,9 @@ class SaveReminderFragment : BaseFragment() {
             ) {
                 requestBackgroundLocationPermission()
             } else {
-                backgroundVariable= true
-                Log.d("requestPermission","enabled")
+                enableLocationSettingsConfiguration()
             }
-        }
-
-
+        } else {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -204,14 +189,13 @@ class SaveReminderFragment : BaseFragment() {
             ) {
                 requestForegroundLocationPermissions()
             } else {
-                foregroundVariable= true
-                Log.d("requestPermission","enabled2")
+                enableLocationSettingsConfiguration()
             }
-        return foregroundVariable && backgroundVariable
+        }
     }
 
 
-   fun createLocationRequest(): LocationRequest {
+    private fun createLocationRequest(): LocationRequest {
         Log.d("savefrag", "createLocationRequest()")
         return LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
             .setMaxUpdates(1)
@@ -219,14 +203,14 @@ class SaveReminderFragment : BaseFragment() {
 
     }
 
-   private fun enableLocationSettingsConfiguration() {
+    private fun enableLocationSettingsConfiguration() {
         Log.d("savefrag", "enableLocationSettingsConfiguration()")
         val locationRequest = createLocationRequest()
         // get the current location
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
         // then check whether the current location settings are satisfied
         val client = LocationServices.getSettingsClient(requireContext())
-       val task = client.checkLocationSettings(builder.build())
+        val task = client.checkLocationSettings(builder.build())
         task.addOnSuccessListener {
             if (it.locationSettingsStates?.isLocationUsable == true) {
                 saveReminderItem()
@@ -321,7 +305,6 @@ class SaveReminderFragment : BaseFragment() {
             addOnFailureListener {
                 Log.d("saveFrag", "GeofenceNotAdded")
                 _viewModel.showSnackBarInt.value = R.string.geofences_not_added
-                Log.d("saveFrag22", it.toString())
             }
 
         }

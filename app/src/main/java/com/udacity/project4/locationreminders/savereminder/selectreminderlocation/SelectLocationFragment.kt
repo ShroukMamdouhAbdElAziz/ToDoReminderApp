@@ -65,7 +65,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
             // user refused to enable current location
             if (it.resultCode == Activity.RESULT_CANCELED) {
-                // enableCurrentLocationSettings()
+
                 _viewModel.showToast.value =
                     "For better experience you should enable your current location to get it on the map "
 
@@ -112,7 +112,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     }
 
-
     fun enableCurrentLocationSettings() {
         Log.d("select Fragment", "enableCurrentLocationSettings()")
         val getLocationRequet = createLocationRequest()
@@ -150,7 +149,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         val locationResult: Task<Location> = fusedLocationClient.lastLocation
 
-        // to show the current location icon only
         map.isMyLocationEnabled = true
 
         locationResult.addOnCompleteListener {
@@ -241,7 +239,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             requestForegroundLocationPermissions()
         } else {
             enableCurrentLocationSettings()
-
         }
     }
 
